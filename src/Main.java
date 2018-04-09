@@ -50,7 +50,7 @@ public class Main extends Application {
         } catch (IOException e) {
             AlertBox.alert("Error", "Whoops! Something went wrong!");
             e.printStackTrace();
-            window.close();
+            System.exit(1);
         }
     }
 
