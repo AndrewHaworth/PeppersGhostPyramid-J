@@ -7,14 +7,10 @@ import org.opencv.videoio.VideoCapture;
 
 
 public class Animation extends VideoOutput {
-    private CascadeClassifier faceCascade = new CascadeClassifier();
+    private CascadeClassifier faceCascade = new CascadeClassifier("src/faceDetector.xml");
     private int faceSize = 0;
     private Mat frame = new Mat(), gray = new Mat();
     private MatOfRect faces = new MatOfRect();
-
-    public Animation(){
-        faceCascade.load("faceDetector.xml");
-    }
 
     public Image animate(VideoCapture capture) {
         return createImage(detect(grabFrame(capture)));
