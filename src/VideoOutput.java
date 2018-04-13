@@ -1,4 +1,6 @@
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -11,6 +13,8 @@ import java.io.ByteArrayInputStream;
 public abstract class VideoOutput {
     private Mat res = new Mat(), frame90 = new Mat(), frame180 = new Mat(), frame270 = new Mat();
     private MatOfByte buffer = new MatOfByte();
+
+    public abstract void standard(VideoCapture v, ImageView i, BorderPane b);
 
     public Mat duplicate(Mat frame) {
         res.create(new Size(frame.width() * 3, frame.height() * 3), frame.type());

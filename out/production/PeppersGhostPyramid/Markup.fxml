@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.stage.Screen?>
 <?import java.lang.String?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+<BorderPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="${screen.visualBounds.height}"
             prefWidth="${screen.visualBounds.width}" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -16,7 +16,7 @@
         <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>
     <center>
-        <ImageView fx:id="currentFrame" fitWidth="${screen.visualBounds.height}"
+        <ImageView fx:id="mainFrame" fitWidth="${screen.visualBounds.height}"
                    fitHeight="${screen.visualBounds.height}"/>
     </center>
     <bottom>

@@ -3,6 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.ImageView;
@@ -20,9 +21,11 @@ import java.util.concurrent.TimeUnit;
 public class Main extends Application {
 
     @FXML
+    public BorderPane anchor;
+    @FXML
     private ChoiceBox<String> choiceBox;
     @FXML
-    public ImageView currentFrame;
+    public ImageView mainFrame;
     @FXML
     private Button exitButton;
 
@@ -39,14 +42,13 @@ public class Main extends Application {
     public void start(Stage window) {
         window.setTitle("Pepper's Ghost Pyramid");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Markup.fxml"));
-            BorderPane anchor = loader.load();
-            Scene scene = new Scene(anchor);
+            Scene scene = new Scene(new FXMLLoader(getClass().getResource("Markup.fxml")).load());
             scene.getStylesheets().add("Design.css");
             window.setScene(scene);
             window.setMaximized(true);
             window.initStyle(StageStyle.UNDECORATED);
             window.show();
+
         } catch (IOException e) {
             AlertBox.alert("Error", "Whoops! Something went wrong!");
             e.printStackTrace();
@@ -62,9 +64,9 @@ public class Main extends Application {
         new Thread(thread = () -> {
             String choice = choiceBox.getSelectionModel().getSelectedItem();
             if (choice.equals("Standard")) {
-                currentFrame.setImage(camera.standard(videoCapture));
+                camera.standard(videoCapture, mainFrame, anchor);
             } else if (choice.equals("Animation")) {
-                currentFrame.setImage(animate.animate(videoCapture));
+                animate.standard(videoCapture, mainFrame, anchor);
             } else if (actionEvent.getSource() == exitButton) {
                 exit();
             } else
