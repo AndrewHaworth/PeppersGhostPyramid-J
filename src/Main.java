@@ -3,7 +3,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.ImageView;
@@ -13,7 +12,6 @@ import javafx.stage.StageStyle;
 import org.opencv.core.Core;
 import org.opencv.videoio.VideoCapture;
 
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class Main extends Application {
 
     @FXML
-    public BorderPane anchor;
+    private BorderPane anchor = new BorderPane();
     @FXML
     private ChoiceBox<String> choiceBox;
     @FXML
@@ -32,6 +30,7 @@ public class Main extends Application {
     private VideoCapture videoCapture = new VideoCapture();
     private Camera camera = new Camera();
     private Animation animate = new Animation();
+    private Scene scene;
 
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -42,14 +41,13 @@ public class Main extends Application {
     public void start(Stage window) {
         window.setTitle("Pepper's Ghost Pyramid");
         try {
-            Scene scene = new Scene(new FXMLLoader(getClass().getResource("Markup.fxml")).load());
+            scene = new Scene(new FXMLLoader(getClass().getResource("Markup.fxml")).load());
             scene.getStylesheets().add("Design.css");
             window.setScene(scene);
             window.setMaximized(true);
             window.initStyle(StageStyle.UNDECORATED);
             window.show();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             AlertBox.alert("Error", "Whoops! Something went wrong!");
             e.printStackTrace();
             System.exit(1);
@@ -58,8 +56,9 @@ public class Main extends Application {
 
     @FXML
     public void buttonPress(ActionEvent actionEvent) {
-        if (!videoCapture.isOpened())
+        if (!videoCapture.isOpened()) {
             videoCapture.open(0);
+        }
         Runnable thread;
         new Thread(thread = () -> {
             String choice = choiceBox.getSelectionModel().getSelectedItem();

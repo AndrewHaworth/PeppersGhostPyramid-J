@@ -1,3 +1,6 @@
+import javafx.application.Platform;
+import javafx.scene.Group;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,23 +19,60 @@ import java.io.ByteArrayInputStream;
 
 
 public class Animation {
-    private CascadeClassifier faceCascade = new CascadeClassifier("src/faceDetector.xml");
-    private int faceSize = 0;
+    private CascadeClassifier faceCascade;
+    private int faceSize;
     private Mat frame = new Mat(), gray = new Mat();
-    private MatOfRect faces = new MatOfRect();
-    private MatOfByte buffer = new MatOfByte();
+    private MatOfRect faces;
+    private MatOfByte buffer;
+    private SubScene scene;
+    private Group group;
+    private Sphere sphere;
 
-    public void standard(VideoCapture capture, ImageView currentFrame, BorderPane anchor) {
-        SubScene sub = new SubScene(anchor.getParent(), 1, 1);
-        anchor.setRight(sub);
-        new Thread(() -> createScene(sub)).start();
-        currentFrame.setImage(createImage(detect(grabFrame(capture))));
-    }
-
-    private void createScene(SubScene sideFrame) {
-        Sphere sphere = new Sphere(200);
+    public Animation() {
+        faceCascade = new CascadeClassifier("src/faceDetector.xml");
+        faceSize = 0;
+        faces = new MatOfRect();
+        buffer = new MatOfByte();
+        group = new Group();
+        scene = new SubScene(group, 400, 400, false, SceneAntialiasing.BALANCED);
+        sphere = new Sphere(200);
         PhongMaterial phongMaterial = new PhongMaterial(Color.ALICEBLUE);
         sphere.setMaterial(phongMaterial);
+        group.getChildren().add(sphere);
+    }
+
+    public void standard(VideoCapture capture, ImageView currentFrame, BorderPane anchor) {
+        createScene(capture, currentFrame, anchor);
+    }
+
+    private void createScene(VideoCapture capture, ImageView currentFrame, BorderPane anchor) {
+        Platform.runLater(() -> anchor.setCenter(scene));
+        currentFrame.setImage(null);
+        scene.setRoot(group);
+
+        int x = detectX(grabFrame(capture));
+        int y = detectY(grabFrame(capture));
+        sphere.setLayoutX(x);
+        sphere.setLayoutY(y);
+        System.out.println(x + " " + y);
+    }
+
+    private int detectY(Mat frame) {
+        int height = frame.rows();
+        Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.equalizeHist(gray, gray);
+        if (faceSize == 0)
+            if (Math.round(height * 0.2) > 0)
+                faceSize = (int) Math.round(height * 0.2);
+        faceCascade.detectMultiScale(gray, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE, new Size(faceSize, faceSize), new Size());
+        Rect[] faceArray = faces.toArray();
+        for (Rect face : faceArray) {
+            Imgproc.rectangle(frame, face.tl(), face.br(), new Scalar(255, 0, 0), 1);
+        }
+        if (faceArray.length != 0)
+            return faceArray[0].y;
+        else
+            return 200;
     }
 
     private Mat grabFrame(VideoCapture capture) {
@@ -48,7 +88,7 @@ public class Animation {
         }
     }
 
-    private Mat detect(Mat frame) {
+    private int detectX(Mat frame) {
         int height = frame.rows();
         Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
         Imgproc.equalizeHist(gray, gray);
@@ -60,11 +100,10 @@ public class Animation {
         for (Rect face : faceArray) {
             Imgproc.rectangle(frame, face.tl(), face.br(), new Scalar(255, 0, 0), 1);
         }
-        return frame;
+        if (faceArray.length != 0)
+            return faceArray[0].x;
+        else
+            return 200;
     }
 
-    private Image createImage(Mat frame) {
-        Imgcodecs.imencode(".bmp", frame, buffer);
-        return new Image(new ByteArrayInputStream(buffer.toArray()));
-    }
 }

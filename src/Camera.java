@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import org.opencv.core.CvType;
@@ -11,6 +12,7 @@ public class Camera extends VideoOutput {
     private Mat gray = new Mat(), thresholdImg = new Mat(), hsv = new Mat(), frame = new Mat();
 
     public void standard(VideoCapture capture, ImageView currentFrame, BorderPane anchor) {
+        Platform.runLater(() -> anchor.setCenter(currentFrame));
         currentFrame.setImage(createImage(duplicate(removeBackground(grabFrame(capture)))));
     }
 
