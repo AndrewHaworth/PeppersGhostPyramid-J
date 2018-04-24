@@ -30,7 +30,6 @@ public class Main extends Application {
     private VideoCapture videoCapture = new VideoCapture();
     private Camera camera = new Camera();
     private Animation animate = new Animation();
-    private Scene scene;
 
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -41,7 +40,7 @@ public class Main extends Application {
     public void start(Stage window) {
         window.setTitle("Pepper's Ghost Pyramid");
         try {
-            scene = new Scene(new FXMLLoader(getClass().getResource("Markup.fxml")).load());
+            Scene scene = new Scene(new FXMLLoader(getClass().getResource("Markup.fxml")).load());
             scene.getStylesheets().add("Design.css");
             window.setScene(scene);
             window.setMaximized(true);

@@ -19,7 +19,7 @@
         <ImageView fx:id="mainFrame" fitWidth="${screen.visualBounds.height}"
                    fitHeight="${screen.visualBounds.height}"/>
     </center>
-    <bottom>
+    <right>
         <HBox alignment="CENTER" spacing="10">
             <ChoiceBox id="choiceBox" fx:id="choiceBox" value="Select a mode">
                 <String fx:value="Standard"/>
@@ -28,5 +28,5 @@
             <Button id="button" onAction="#buttonPress" text="Start"/>
             <Button id="button" fx:id="exitButton" onAction="#exit" text="Exit" BorderPane.alignment="CENTER"/>
         </HBox>
-    </bottom>
+    </right>
 </BorderPane>
