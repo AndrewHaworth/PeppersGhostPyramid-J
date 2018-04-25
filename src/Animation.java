@@ -91,17 +91,7 @@ public class Animation {
     }
 
     private int detectX(Mat frame) {
-        int height = frame.rows();
-        Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
-        Imgproc.equalizeHist(gray, gray);
-        if (faceSize == 0)
-            if (Math.round(height * 0.2) > 0)
-                faceSize = (int) Math.round(height * 0.2);
-        faceCascade.detectMultiScale(gray, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE, new Size(faceSize, faceSize), new Size());
-        Rect[] faceArray = faces.toArray();
-        for (Rect face : faceArray) {
-            Imgproc.rectangle(frame, face.tl(), face.br(), new Scalar(255, 0, 0), 1);
-        }
+        Rect[] faceArray = getRects(frame);
         if (faceArray.length != 0)
             return faceArray[0].x;
         else
@@ -109,6 +99,14 @@ public class Animation {
     }
 
     private int detectY(Mat frame) {
+        Rect[] faceArray = getRects(frame);
+        if (faceArray.length != 0)
+            return faceArray[0].y;
+        else
+            return 100;
+    }
+
+    private Rect[] getRects(Mat frame) {
         int height = frame.rows();
         Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
         Imgproc.equalizeHist(gray, gray);
@@ -120,10 +118,7 @@ public class Animation {
         for (Rect face : faceArray) {
             Imgproc.rectangle(frame, face.tl(), face.br(), new Scalar(255, 0, 0), 1);
         }
-        if (faceArray.length != 0)
-            return faceArray[0].y;
-        else
-            return 100;
+        return faceArray;
     }
 
     private void createBoxes() {
