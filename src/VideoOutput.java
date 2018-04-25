@@ -1,16 +1,20 @@
 import javafx.scene.image.Image;
-import org.opencv.core.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 
 import java.io.ByteArrayInputStream;
 
-/**
- * Created by Andrew Haworth.
- */
-public class VideoOutput {
-    private Mat res = new Mat(), frame90 = new Mat(), frame180 = new Mat(), frame270 = new Mat(), frame = new Mat();
+public abstract class VideoOutput {
+    private Mat res = new Mat(), frame90 = new Mat(), frame180 = new Mat(), frame270 = new Mat();
     private MatOfByte buffer = new MatOfByte();
+
+    public abstract void standard(VideoCapture v, ImageView i, BorderPane b);
 
     public Mat duplicate(Mat frame) {
         res.create(new Size(frame.width() * 3, frame.height() * 3), frame.type());
@@ -41,24 +45,7 @@ public class VideoOutput {
         return res;
     }
 
-    public Mat grabFrame(VideoCapture capture) {
-        if (capture.isOpened())
-            capture.read(frame);
-        else
-            System.out.println("No camera!");
-        if (!frame.empty()) {
-            if (frame.rows() <= frame.cols())
-                frame = new Mat(frame, new Rect((frame.cols() - frame.rows()) / 2, 0,
-                        frame.rows(), frame.rows()));
-            else
-                frame = new Mat(frame, new Rect(0, (frame.rows() - frame.cols()) / 2,
-                        frame.cols(), frame.cols()));
-            return frame;
-        } else {
-            System.out.println("Oh no! The frame is empty. Sending blank.");
-            return new Mat(1920, 1080, CvType.CV_8U, new Scalar(128, 128, 128));
-        }
-    }
+    public abstract Mat grabFrame(VideoCapture capture);
 
     public Image createImage(Mat frame) {
         Imgcodecs.imencode(".bmp", frame, buffer);

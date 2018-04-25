@@ -1,0 +1,63 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x7718f714, pid=4716, tid=0x00001ab8
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_111-b14) (build 1.8.0_111-b14)
+# Java VM: Java HotSpot(TM) Client VM (25.111-b14 mixed mode windows-x86 )
+# Problematic frame:
+# C  [MSCTF.dll+0xf714]
+#
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x17fd4800):  JavaThread "JavaFX Application Thread" [_thread_in_native, id=6840, stack(0x18d10000,0x18d60000)]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0xbebdbdbd
+
+Registers:
+EAX=0xfd0d3b7c, EBX=0x00000015, ECX=0x18d5e3e4, EDX=0xbebdbdbd
+ESP=0x18d5e3c0, EBP=0x18d5e3c8, ESI=0x18d5e3e4, EDI=0xbfbebfbf
+EIP=0x7718f714, EFLAGS=0x00010286
+
+Top of Stack: (sp=0x18d5e3c0)
+0x18d5e3c0:   03677db0 fd0d3b7c 18d5e3e8 7718f475
+0x18d5e3d0:   bebdbdbd 39ac0193 777c5ed0 184b2ae0
+0x18d5e3e0:   39ac0193 bebdbdbd 18d5e3f8 7718f436
+0x18d5e3f0:   00000001 00000000 18d5e41c 777cbc53
+0x18d5e400:   39ac0193 00000015 00000001 00000000
+0x18d5e410:   17632168 0014058e fd151afb 18d5e474
+0x18d5e420:   51f64685 39ac0193 00000015 00000001
+0x18d5e430:   00000000 17fd4800 17632168 051ed3d3 
+
+Instructions: (pc=0x7718f714)
+0x7718f6f4:   09 ff ff ff 8b ff 55 8b ec 51 a1 d4 d8 26 77 33
+0x7718f704:   c5 89 45 fc 8b 55 08 56 8b f1 89 16 85 d2 74 19
+0x7718f714:   8b 02 57 52 8b 78 04 81 ff 70 b3 1b 77 0f 85 66
+0x7718f724:   ca 04 00 e8 44 bc 02 00 5f 8b 4d fc 8b c6 33 cd 
+
+
+Register to memory mapping:
+
+EAX=0xfd0d3b7c is an unknown value
+EBX=0x00000015 is an unknown value
+ECX=0x18d5e3e4 is pointing into the stack for thread: 0x17fd4800
+EDX=0xbebdbdbd is an unknown value
+ESP=0x18d5e3c0 is pointing into the stack for thread: 0x17fd4800
+EBP=0x18d5e3c8 is pointing into the stack for thread: 0x17fd4800
+ESI=0x18d5e3e4 is pointing into the stack for thread: 0x17fd4800
+EDI=0xbfbebfbf is an unknown value
+
+
+Stack: [0x18d10000,0x18d60000],  sp=0x18d5e3c0,  free space=312k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [MSCTF.dll+0xf714]
+C  [MSCTF.dll+0xf475]
+C

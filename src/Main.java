@@ -12,7 +12,6 @@ import javafx.stage.StageStyle;
 import org.opencv.core.Core;
 import org.opencv.videoio.VideoCapture;
 
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,9 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class Main extends Application {
 
     @FXML
+    private BorderPane anchor = new BorderPane();
+    @FXML
     private ChoiceBox<String> choiceBox;
     @FXML
-    public ImageView currentFrame;
+    public ImageView mainFrame;
     @FXML
     private Button exitButton;
 
@@ -39,32 +40,31 @@ public class Main extends Application {
     public void start(Stage window) {
         window.setTitle("Pepper's Ghost Pyramid");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Markup.fxml"));
-            BorderPane anchor = loader.load();
-            Scene scene = new Scene(anchor);
+            Scene scene = new Scene(new FXMLLoader(getClass().getResource("Markup.fxml")).load());
             scene.getStylesheets().add("Design.css");
             window.setScene(scene);
             window.setMaximized(true);
             window.initStyle(StageStyle.UNDECORATED);
             window.show();
-        } catch (IOException e) {
+        } catch (Exception e) {
             AlertBox.alert("Error", "Whoops! Something went wrong!");
             e.printStackTrace();
-            window.close();
+            System.exit(1);
         }
     }
 
     @FXML
     public void buttonPress(ActionEvent actionEvent) {
-        if (!videoCapture.isOpened())
+        if (!videoCapture.isOpened()) {
             videoCapture.open(0);
+        }
         Runnable thread;
         new Thread(thread = () -> {
             String choice = choiceBox.getSelectionModel().getSelectedItem();
             if (choice.equals("Standard")) {
-                currentFrame.setImage(camera.standard(videoCapture));
+                camera.standard(videoCapture, mainFrame, anchor);
             } else if (choice.equals("Animation")) {
-                currentFrame.setImage(animate.animate(videoCapture));
+                animate.standard(videoCapture, mainFrame, anchor);
             } else if (actionEvent.getSource() == exitButton) {
                 exit();
             } else
