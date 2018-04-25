@@ -52,11 +52,16 @@ public class Animation {
     }
 
     private void manipulate(int faceX, int faceY) {
-        System.out.println((faceX - 200) + " " + (faceY - 100));
+        faceX -= 200;
+        faceY -= 100;
+        System.out.println((faceX) + " " + (faceY));
 
-        double getX = (currentXRotation - faceX) / 100;
-        double getY = (currentYRotation - faceY) / 100;
-
+        double getX = (currentXRotation - faceX) / 4 * -1;
+        double getY = (currentYRotation - faceY) / 3 * -1;
+        currentXRotation = faceX;
+        currentYRotation = faceY;
+        if (faceX == 0 && faceY == 0)
+            topBox.getTransforms().removeAll();
 
 
         topBox.getTransforms().add(new Rotate(getX, new Point3D(0, 1, 0)));
