@@ -79,15 +79,16 @@ public class Animation {
 
     private Mat grabFrame(VideoCapture capture) {
         if (capture.isOpened())
-            capture.read(frame);
-        else
-            System.out.println("No camera!");
-        if (!frame.empty()) {
-            return frame;
-        } else {
-            System.out.println("Oh no! The frame is empty. Sending blank.");
-            return new Mat(1920, 1080, CvType.CV_8U, new Scalar(128, 128, 128));
-        }
+            try {
+                capture.read(frame);
+                if (!frame.empty()) {
+                    return frame;
+                }
+                throw new CvException("Camera not reading correctly");
+            } catch (CvException e) {
+                e.printStackTrace();
+            }
+        return new Mat(400, 300, CvType.CV_8U, new Scalar(128, 128, 128));
     }
 
     private int detectX(Mat frame) {
