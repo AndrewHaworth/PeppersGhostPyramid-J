@@ -9,7 +9,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 public class Camera extends VideoOutput {
-    private Mat gray = new Mat(), thresholdImg = new Mat(), hsv = new Mat(), frame = new Mat();
+    private Mat gray = new Mat(), thresholdImg = new Mat(), frame = new Mat();
 
     public void standard(VideoCapture capture, ImageView currentFrame, BorderPane anchor) {
         Platform.runLater(() -> anchor.setCenter(currentFrame));
@@ -17,10 +17,9 @@ public class Camera extends VideoOutput {
     }
 
     private Mat removeBackground(Mat frame) {
-        hsv.create(frame.size(), CvType.CV_8U);
         Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
         Imgproc.adaptiveThreshold(gray, thresholdImg, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV,
-                frame.height() > frame.width() ? (frame.height() * 2) + 1 : (frame.width() * 2) + 1, 17);
+                frame.height() > frame.width() ? (frame.height() * 2) + 1 : (frame.width() * 2) + 1, 7);
         Mat foreground = new Mat(frame.size(), CvType.CV_8UC3, new Scalar(0, 0, 0));
         frame.copyTo(foreground, thresholdImg);
         return foreground;

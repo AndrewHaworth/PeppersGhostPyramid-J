@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,9 +56,11 @@ public class Main extends Application {
 
     @FXML
     public void buttonPress(ActionEvent actionEvent) {
-        if (!videoCapture.isOpened()) {
-            videoCapture.open(0);
-        }
+        if (choiceBox.getSelectionModel().getSelectedItem().equals("Standard")
+                || choiceBox.getSelectionModel().getSelectedItem().equals("Animation"))
+            if (!videoCapture.isOpened()) {
+                videoCapture.open(0);
+            }
         Runnable thread;
         new Thread(thread = () -> {
             String choice = choiceBox.getSelectionModel().getSelectedItem();
@@ -67,8 +70,7 @@ public class Main extends Application {
                 animate.standard(videoCapture, mainFrame, anchor);
             } else if (actionEvent.getSource() == exitButton) {
                 exit();
-            } else
-                AlertBox.alert("Warning!", "For some reason there is an error with the button press?");
+            }
         }).start();
         ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
         timer.scheduleAtFixedRate(thread, 0, 33, TimeUnit.MILLISECONDS);
